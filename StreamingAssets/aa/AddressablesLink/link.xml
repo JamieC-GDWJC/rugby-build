@@ -3,6 +3,7 @@
     <type fullname="AudioManager" preserve="all" />
     <type fullname="CanvasController" preserve="all" />
     <type fullname="ClickForLink" preserve="all" />
+    <type fullname="CrowdAnimationRandomiser" preserve="all" />
     <type fullname="FireBaseCommunication" preserve="all" />
     <type fullname="GameManager" preserve="all" />
     <type fullname="Kick" preserve="all" />
