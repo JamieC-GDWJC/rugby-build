@@ -28,6 +28,22 @@
 
 <body style="background-color: #00a085;">
 
+<script>
+  // Lock the screen orientation to portrait or landscape
+  function lockOrientation() {
+    if (screen.orientation && screen.orientation.lock) {
+      // Lock to portrait (you can change 'portrait' to 'landscape' if needed)
+      screen.orientation.lock('portrait').catch(function (error) {
+        console.error('Screen lock failed:', error);
+      });
+    }
+  }
+
+  // Call the function to lock orientation
+  lockOrientation();
+</script>
+
+
 <canvas id="unity-canvas" tabindex="-1"></canvas>
 
 <script src="Build/005 brotli final.loader.js"></script>
@@ -92,6 +108,8 @@
   const app = firebase.initializeApp(firebaseConfig);
   const analytics = firebase.analytics(app);
 </script>
+
+
 
 </body>
 </html>
