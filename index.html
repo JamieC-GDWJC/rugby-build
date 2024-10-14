@@ -10,9 +10,13 @@
       overflow-x: hidden; /* Hide horizontal scrollbar */
     }</style>
 </head>
+
 <body style="text-align: center; padding: 0; border: 0; margin: 0;background-color: #00a085 ;">
-<canvas id="unity-canvas" width=100% height=50% tabindex="-1" style="width: 100%; height: 100%; background: url('https://i.imgur.com/MYvbXpq.png') no-repeat top center; background-size: contain;"></canvas>
+
+<canvas id="unity-canvas" width=window.innerWidth height=window.innerHeight tabindex="-1" style="width: 100%; height: 100%; background: url('https://i.imgur.com/MYvbXpq.png') no-repeat top center; background-size: contain;"></canvas>
+
 <script src="Build/005 brotli final.loader.js"></script>
+
 <script>
   if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
     // Mobile device style: fill the whole browser client area with the game canvas:
