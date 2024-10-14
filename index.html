@@ -10,6 +10,7 @@
       overflow-x: hidden; /* Hide horizontal scrollbar */
       margin: 0;
       padding: 0;
+      background-color: #00a085;
     }
 
     #unity-canvas {
@@ -23,53 +24,81 @@
       left: 0;
     }
 
+    /* Style for the message when in landscape mode */
+    #rotate-message {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.9); /* Semi-transparent background */
+      color: white;
+      font-size: 24px;
+      z-index: 999; /* Ensure the message is above the canvas */
+      text-align: center;
+    }
+
+    /* Show the message when in landscape mode */
+    @media screen and (orientation: landscape) {
+      #unity-canvas {
+        display: none;
+      }
+      #rotate-message {
+        display: flex;
+      }
+    }
+
+    /* Hide the message when in portrait mode */
+    @media screen and (orientation: portrait) {
+      #rotate-message {
+        display: none;
+      }
+      #unity-canvas {
+        display: block;
+      }
+    }
   </style>
 </head>
 
-<body style="background-color: #00a085;">
+<body>
 
-<script>
-  // Lock the screen orientation to portrait or landscape
-  function lockOrientation() {
-    if (screen.orientation && screen.orientation.lock) {
-      // Lock to portrait (you can change 'portrait' to 'landscape' if needed)
-      screen.orientation.lock('portrait').catch(function (error) {
-        console.error('Screen lock failed:', error);
-      });
-    }
-  }
-
-  // Call the function to lock orientation
-  lockOrientation();
-</script>
-
-
+<!-- Unity Canvas -->
 <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+<!-- Message that appears in landscape mode -->
+<div id="rotate-message">
+  Please rotate your device to portrait mode to play the game.
+</div>
 
 <script src="Build/005 brotli final.loader.js"></script>
 
 <script>
+  // Function to resize the canvas to fit the window
   function resizeCanvas() {
     var canvas = document.querySelector("#unity-canvas");
     canvas.style.width = window.innerWidth + 'px';
     canvas.style.height = window.innerHeight + 'px';
   }
 
-  // Attach the resize event to update canvas size when window changes
+  // Attach the resize event to update the canvas size when the window changes
   window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
 
   // Trigger initial resize
   resizeCanvas();
 
+  // Mobile device configuration
   if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-    // Mobile device style: fill the whole browser client area with the game canvas:
     var meta = document.createElement('meta');
     meta.name = 'viewport';
     meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
     document.getElementsByTagName('head')[0].appendChild(meta);
   }
 
+  // Unity instance creation
   createUnityInstance(document.querySelector("#unity-canvas"), {
     arguments: [],
     dataUrl: "Build/005 brotli final.data.unityweb",
@@ -79,10 +108,22 @@
     companyName: "Game Design with Jamie Clarke",
     productName: "Mixtape Rugby",
     productVersion: "0.2.0",
-    matchWebGLToCanvasSize: true, // Ensure the WebGL canvas render size matches DOM element size
+    matchWebGLToCanvasSize: true
   }).then((unityInstance) => {
     window.unityInstance = unityInstance;
   });
+
+  // Function to lock the orientation to portrait if supported
+  function lockOrientation() {
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('portrait').catch(function (error) {
+        console.log('Screen orientation lock not supported:', error);
+      });
+    }
+  }
+
+  // Attempt to lock the screen orientation to portrait on load
+  lockOrientation();
 
 </script>
 
@@ -108,8 +149,6 @@
   const app = firebase.initializeApp(firebaseConfig);
   const analytics = firebase.analytics(app);
 </script>
-
-
 
 </body>
 </html>
