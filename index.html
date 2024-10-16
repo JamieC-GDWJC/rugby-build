@@ -44,20 +44,21 @@
     /* Show the message when in landscape mode */
     @media screen and (orientation: landscape) {
       #unity-canvas {
-        display: none;
+        display: flex;
       }
       #rotate-message {
-        display: flex;
+        display: none;
       }
     }
 
     /* Hide the message when in portrait mode */
+    
     @media screen and (orientation: portrait) {
       #rotate-message {
         display: none;
       }
       #unity-canvas {
-        display: block;
+        display: flex;
       }
     }
   </style>
