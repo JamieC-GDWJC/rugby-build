@@ -62,6 +62,29 @@
       }
     }
   </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Listen for the TMP Input Field to be created
+      const input = document.querySelector("input");
+
+      if (input) {
+        // Hide the input field when created
+        input.style.position = "absolute"; // Move it out of view
+        input.style.bottom = "-999px";     // Move it far off the screen
+        input.style.opacity = 0;           // Make it invisible
+
+        // Optionally, you can control its display behavior during typing
+        input.addEventListener('focus', function() {
+          input.style.opacity = 0;         // Keep it hidden while typing
+        });
+
+        input.addEventListener('blur', function() {
+          input.style.opacity = 0;         // Hide again when the user stops typing
+        });
+      }
+    });
+  </script>
+
 </head>
 
 <body>
