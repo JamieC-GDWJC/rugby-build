@@ -63,27 +63,34 @@
     }
   </style>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Listen for the TMP Input Field to be created
-      const input = document.querySelector("input");
+    document.addEventListener("DOMContentLoaded", function () {
+      // Listen for focus and blur events on input fields created by Unity
+      document.addEventListener('focusin', function (event) {
+        var target = event.target;
+        if (target.tagName.toLowerCase() === 'input' || target.tagName.toLowerCase() === 'textarea') {
+          // Reposition or hide the input box when focused
+          target.style.position = "absolute"; // Move it out of the view
+          target.style.bottom = "-999px";     // Keep it far off-screen
+          target.style.opacity = 0;           // Make it transparent
+        }
+      });
 
-      if (input) {
-        // Hide the input field when created
-        input.style.position = "absolute"; // Move it out of view
-        input.style.bottom = "-999px";     // Move it far off the screen
-        input.style.opacity = 0;           // Make it invisible
-
-        // Optionally, you can control its display behavior during typing
-        input.addEventListener('focus', function() {
-          input.style.opacity = 0;         // Keep it hidden while typing
-        });
-
-        input.addEventListener('blur', function() {
-          input.style.opacity = 0;         // Hide again when the user stops typing
-        });
-      }
+      document.addEventListener('focusout', function (event) {
+        var target = event.target;
+        if (target.tagName.toLowerCase() === 'input' || target.tagName.toLowerCase() === 'textarea') {
+          // Optionally, handle blur events
+          target.style.opacity = 0; // Ensure it's hidden again after typing
+        }
+      });
     });
   </script>
+  <style>
+    input[type="text"], input[type="password"], input[type="email"], textarea {
+      position: absolute;
+      bottom: -9999px;
+      opacity: 0;
+    }
+  </style>
 
 </head>
 
