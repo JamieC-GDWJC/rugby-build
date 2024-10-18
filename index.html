@@ -26,7 +26,6 @@
       left: 0;
     }
 
-
     /* Portrait mode (default) - canvas fills the screen */
     @media screen and (orientation: portrait) {
       #unity-canvas {
@@ -74,40 +73,40 @@
           target.style.opacity = 0; // Keep hidden after typing
         }
       });
-    });
 
-    // Function to resize the canvas based on mobile keyboard and orientation
-    function resizeCanvas() {
-      var canvas = document.querySelector("#unity-canvas");
+      // Function to resize the canvas based on mobile keyboard and orientation
+      function resizeCanvas() {
+        var canvas = document.querySelector("#unity-canvas");
 
-      // Check if the mobile keyboard is visible by comparing viewport and screen height
-      const isKeyboardVisible = window.innerHeight < window.outerHeight * 0.7;
+        // Check if the mobile keyboard is visible by comparing viewport and screen height
+        const isKeyboardVisible = window.innerHeight < window.outerHeight * 0.7;
 
-      if (isKeyboardVisible) {
-        // Adjust the canvas height to fit the visible space (keyboard open)
-        canvas.style.height = window.innerHeight + 'px';
-      } else {
-        // Adjust canvas size based on orientation
-        if (window.innerWidth > window.innerHeight) {
-          // Landscape mode: 1:1 aspect ratio (square)
-          canvas.style.width = window.innerHeight + 'px';
+        if (isKeyboardVisible) {
+          // Adjust the canvas height to fit the visible space (keyboard open)
           canvas.style.height = window.innerHeight + 'px';
-          canvas.style.left = (window.innerWidth - window.innerHeight) / 2 + 'px'; // Center horizontally
         } else {
-          // Portrait mode: Full screen
-          canvas.style.width = window.innerWidth + 'px';
-          canvas.style.height = window.innerHeight + 'px';
-          canvas.style.left = '0'; // Reset to full width
+          // Adjust canvas size based on orientation
+          if (window.innerWidth > window.innerHeight) {
+            // Landscape mode: 1:1 aspect ratio (square)
+            canvas.style.width = window.innerHeight + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            canvas.style.left = (window.innerWidth - window.innerHeight) / 2 + 'px'; // Center horizontally
+          } else {
+            // Portrait mode: Full screen
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            canvas.style.left = '0'; // Reset to full width
+          }
         }
       }
-    }
 
-    // Attach the resize event to update the canvas size when the window changes
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('orientationchange', resizeCanvas);
+      // Attach the resize event to update the canvas size when the window changes
+      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('orientationchange', resizeCanvas);
 
-    // Trigger initial resize
-    resizeCanvas();
+      // Trigger initial resize after the page fully loads
+      resizeCanvas(); // This will run after the canvas is present in the DOM
+    });
 
     // Mobile device configuration for viewport
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
