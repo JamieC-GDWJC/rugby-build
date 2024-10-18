@@ -44,15 +44,36 @@
     }
   </style>
 
-  <!-- JavaScript to handle Unity and keyboard -->
+  <!-- JavaScript to handle Unity and mobile keyboard -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
 
+      const canvas = document.querySelector("#unity-canvas");
+
       // Handle virtual keyboard by adjusting canvas size when keyboard is shown on mobile
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        const canvas = document.querySelector("#unity-canvas");
 
-        // Use the visualViewport API to adjust the canvas position dynamically
+        // Move the input field off-screen when focused (keyboard opens)
+        document.addEventListener('focusin', function (event) {
+          var target = event.target;
+          if (target.tagName.toLowerCase() === 'input' || target.tagName.toLowerCase() === 'textarea') {
+            // Hide the input by moving it off-screen
+            target.style.position = "absolute";
+            target.style.top = "-999px";  // Move it way up to hide it
+            target.style.left = "-999px";
+            target.style.opacity = 0;     // Make it invisible
+          }
+        });
+
+        // Keep the input field hidden after focus is lost (keyboard closes)
+        document.addEventListener('focusout', function (event) {
+          var target = event.target;
+          if (target.tagName.toLowerCase() === 'input' || target.tagName.toLowerCase() === 'textarea') {
+            target.style.opacity = 0; // Ensure it's hidden after keyboard is dismissed
+          }
+        });
+
+        // Adjust canvas size dynamically using the visualViewport API
         window.visualViewport.addEventListener('resize', function () {
           if (window.visualViewport.height < window.innerHeight) {
             // Keyboard is probably open, reduce canvas height
