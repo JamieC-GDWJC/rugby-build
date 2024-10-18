@@ -54,22 +54,35 @@
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
 
         // Move the input field off-screen when focused (keyboard opens)
+        const hideInputFields = (target) => {
+          target.style.position = "absolute";
+          target.style.top = "-999px";  // Move it way up to hide it
+          target.style.left = "-999px";
+          target.style.opacity = 0;     // Make it invisible
+        };
+
+        // Ensure that all input fields are properly hidden after focus out
+        const resetAllInputs = () => {
+          document.querySelectorAll('input, textarea').forEach((input) => {
+            input.style.position = "absolute";
+            input.style.opacity = 0;
+            input.style.top = "-999px";
+            input.style.left = "-999px";
+          });
+        };
+
+        // Move the input off-screen and hide it when it gets focus
         document.addEventListener('focusin', function (event) {
-          var target = event.target;
-          if (target.tagName.toLowerCase() === 'input' || target.tagName.toLowerCase() === 'textarea') {
-            // Hide the input by moving it off-screen
-            target.style.position = "absolute";
-            target.style.top = "-999px";  // Move it way up to hide it
-            target.style.left = "-999px";
-            target.style.opacity = 0;     // Make it invisible
+          if (event.target.tagName.toLowerCase() === 'input' || event.target.tagName.toLowerCase() === 'textarea') {
+            resetAllInputs();  // Reset other inputs to avoid any reappearance
+            hideInputFields(event.target);  // Apply the hide logic to the current input field
           }
         });
 
-        // Keep the input field hidden after focus is lost (keyboard closes)
+        // Ensure all fields remain hidden after focus is lost (keyboard closes)
         document.addEventListener('focusout', function (event) {
-          var target = event.target;
-          if (target.tagName.toLowerCase() === 'input' || target.tagName.toLowerCase() === 'textarea') {
-            target.style.opacity = 0; // Ensure it's hidden after keyboard is dismissed
+          if (event.target.tagName.toLowerCase() === 'input' || event.target.tagName.toLowerCase() === 'textarea') {
+            hideInputFields(event.target);  // Reapply the hide logic
           }
         });
 
