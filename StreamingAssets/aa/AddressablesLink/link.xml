@@ -4,6 +4,7 @@
     <type fullname="ClickForLink" preserve="all" />
     <type fullname="FireBaseCommunication" preserve="all" />
     <type fullname="GameManager" preserve="all" />
+    <type fullname="HintTextController" preserve="all" />
     <type fullname="Kick" preserve="all" />
     <type fullname="LightsFlash" preserve="all" />
     <type fullname="PlayFromOffset" preserve="all" />
