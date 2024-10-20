@@ -1,6 +1,7 @@
 <linker>
   <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="AudioManager" preserve="all" />
+    <type fullname="BallCommunication" preserve="all" />
     <type fullname="ClickForLink" preserve="all" />
     <type fullname="FireBaseCommunication" preserve="all" />
     <type fullname="GameManager" preserve="all" />
@@ -126,6 +127,9 @@
     <type fullname="UnityEngine.BoxCollider" preserve="all" />
     <type fullname="UnityEngine.CapsuleCollider" preserve="all" />
     <type fullname="UnityEngine.Rigidbody" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Font" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.EventSystems.EventSystem" preserve="all" />

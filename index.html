@@ -18,7 +18,7 @@
     #unity-canvas {
       width: 100vw;
       height: 100vh;
-      background: url('https://i.imgur.com/MYvbXpq.png') no-repeat top center;
+      background: url('https://i.imgur.com/EyOcHjB.png') no-repeat top center;
       background-size: contain;
       display: block;
       position: fixed;
@@ -113,21 +113,32 @@
 <script>
   // Function to resize the canvas on window resize
   function resizeCanvas() {
-    var canvas = document.querySelector("#unity-canvas");
+    const canvas = document.querySelector("#unity-canvas");
 
     // Update the canvas size based on the screen orientation
-    if (window.innerWidth > window.innerHeight) {
-      // Landscape mode: 1:1 aspect ratio (square)
-      canvas.style.width = window.innerHeight + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      canvas.style.left = (window.innerWidth - window.innerHeight) / 2 + 'px'; // Center horizontally
-    } else {
-      // Portrait mode: Full screen
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      canvas.style.left = '0'; // Reset to full width
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    canvas.style.left = '0';
+
+    // Update Unity canvas size if Unity is initialized
+    if (window.unityInstance && window.unityInstance.Module) {
+      window.unityInstance.Module.canvas.width = window.innerWidth;
+      window.unityInstance.Module.canvas.height = window.innerHeight;
+      window.unityInstance.Module.canvas.style.width = window.innerWidth + 'px';
+      window.unityInstance.Module.canvas.style.height = window.innerHeight + 'px';
     }
   }
+
+  // Attach the resize event to update the canvas size when the window changes
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('orientationchange', resizeCanvas);
+
+  // Trigger initial resize
+  resizeCanvas();
+
+  // Lock orientation to portrait if possible
+  lockOrientation();
+
 
   // Attach the resize event to update the canvas size when the window changes
   window.addEventListener('resize', resizeCanvas);
@@ -159,11 +170,13 @@
     window.unityInstance = unityInstance;
   });
 
-  // Function to lock the orientation to portrait if supported
   function lockOrientation() {
     if (screen.orientation && screen.orientation.lock) {
-      screen.orientation.lock('portrait').catch(function (error) {
+      screen.orientation.lock('portrait').then(function () {
+        console.log("Orientation locked to portrait");
+      }).catch(function (error) {
         console.log('Screen orientation lock not supported:', error);
+        resizeCanvas(); // Fallback to resizing canvas manually
       });
     }
   }
