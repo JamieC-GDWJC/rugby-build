@@ -116,16 +116,29 @@
     const canvas = document.querySelector("#unity-canvas");
 
     // Update the canvas size based on the screen orientation
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
-    canvas.style.left = '0';
+    if (window.innerWidth > window.innerHeight) {
+      // Landscape mode - Maintain 1:1 aspect ratio
+      const size = window.innerHeight; // Take the height as the limiting dimension
+      canvas.style.width = size + 'px';
+      canvas.style.height = size + 'px';
+
+      // Center the canvas horizontally
+      canvas.style.left = (window.innerWidth - size) / 2 + 'px';
+      canvas.style.top = '0';  // Ensure it's aligned at the top
+    } else {
+      // Portrait mode - Full width and height
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      canvas.style.left = '0';
+      canvas.style.top = '0';  // Reset to full screen
+    }
 
     // Update Unity canvas size if Unity is initialized
     if (window.unityInstance && window.unityInstance.Module) {
-      window.unityInstance.Module.canvas.width = window.innerWidth;
-      window.unityInstance.Module.canvas.height = window.innerHeight;
-      window.unityInstance.Module.canvas.style.width = window.innerWidth + 'px';
-      window.unityInstance.Module.canvas.style.height = window.innerHeight + 'px';
+      window.unityInstance.Module.canvas.width = parseInt(canvas.style.width);
+      window.unityInstance.Module.canvas.height = parseInt(canvas.style.height);
+      window.unityInstance.Module.canvas.style.width = canvas.style.width;
+      window.unityInstance.Module.canvas.style.height = canvas.style.height;
     }
   }
 
@@ -136,16 +149,6 @@
   // Trigger initial resize
   resizeCanvas();
 
-  // Lock orientation to portrait if possible
-  lockOrientation();
-
-
-  // Attach the resize event to update the canvas size when the window changes
-  window.addEventListener('resize', resizeCanvas);
-  window.addEventListener('orientationchange', resizeCanvas);
-
-  // Trigger initial resize
-  resizeCanvas();
 
   // Mobile device configuration for viewport
   if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
