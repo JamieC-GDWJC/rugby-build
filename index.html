@@ -1,214 +1,190 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unity Web Player | Mixtape Rugby</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | Mixtape Rugby</title>
 
-  <!-- CSS for the page -->
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden; /* Disable scrollbars */
-      background-color: #00a085;
-    }
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #00a085;
+        }
 
-    /* Unity Canvas */
-    #unity-canvas {
-      width: 100vw;
-      height: 100vh;
-      background: url('https://i.imgur.com/EyOcHjB.png') no-repeat top center;
-      background-size: contain;
-      display: block;
-      position: fixed;
-      top: 0;
-      left: 0;
-    }
+        #unity-canvas {
+            width: 100vw;
+            height: 100vh;
+            background: url('https://i.imgur.com/EyOcHjB.png') no-repeat top center;
+            background-size: contain;
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
 
-    /* Portrait mode (default) - canvas fills the screen */
-    @media screen and (orientation: portrait) {
-      #unity-canvas {
-        width: 100vw;  /* Full viewport width */
-        height: 100vh; /* Full viewport height */
-      }
-    }
+        @media screen and (orientation: portrait) {
+            #unity-canvas {
+                width: 100vw;
+                height: 100vh;
+            }
+        }
 
-    /* Landscape mode - canvas with 1:1 aspect ratio */
-    @media screen and (orientation: landscape) {
-      #unity-canvas {
-        width: 100vh;  /* Make width equal to viewport height for 1:1 ratio */
-        height: 100vh; /* Full height of viewport */
-        left: calc(50vw - 50vh); /* Center the square horizontally */
-      }
-    }
-  </style>
+        @media screen and (orientation: landscape) {
+            #unity-canvas {
+                width: 100vh;
+                height: 100vh;
+                left: calc(50vw - 50vh);
+            }
+        }
+    </style>
 
-  <!-- JavaScript to handle Unity and mobile keyboard -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const canvas = document.querySelector("#unity-canvas");
 
-      const canvas = document.querySelector("#unity-canvas");
+            // WebGL context loss prevention
+            canvas.addEventListener('webglcontextlost', (event) => event.preventDefault(), false);
 
-      // Handle virtual keyboard by adjusting canvas size when keyboard is shown on mobile
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                const hideInputFields = (target) => {
+                    target.style.position = "absolute";
+                    target.style.top = "-999px";
+                    target.style.left = "-999px";
+                    target.style.opacity = 0;
+                };
 
-        // Move the input field off-screen when focused (keyboard opens)
-        const hideInputFields = (target) => {
-          target.style.position = "absolute";
-          target.style.top = "-999px";  // Move it way up to hide it
-          target.style.left = "-999px";
-          target.style.opacity = 0;     // Make it invisible
-        };
+                const resetAllInputs = () => {
+                    document.querySelectorAll('input, textarea').forEach((input) => {
+                        hideInputFields(input);
+                    });
+                };
 
-        // Ensure that all input fields are properly hidden after focus out
-        const resetAllInputs = () => {
-          document.querySelectorAll('input, textarea').forEach((input) => {
-            input.style.position = "absolute";
-            input.style.opacity = 0;
-            input.style.top = "-999px";
-            input.style.left = "-999px";
-          });
-        };
+                document.addEventListener('focusin', function (event) {
+                    if (['input', 'textarea'].includes(event.target.tagName.toLowerCase())) {
+                        resetAllInputs();
+                        hideInputFields(event.target);
+                    }
+                });
 
-        // Move the input off-screen and hide it when it gets focus
-        document.addEventListener('focusin', function (event) {
-          if (event.target.tagName.toLowerCase() === 'input' || event.target.tagName.toLowerCase() === 'textarea') {
-            resetAllInputs();  // Reset other inputs to avoid any reappearance
-            hideInputFields(event.target);  // Apply the hide logic to the current input field
-          }
+                document.addEventListener('focusout', function (event) {
+                    if (['input', 'textarea'].includes(event.target.tagName.toLowerCase())) {
+                        hideInputFields(event.target);
+                    }
+                });
+
+                window.visualViewport.addEventListener('resize', function () {
+                    if (window.visualViewport.height < window.innerHeight) {
+                        canvas.style.height = window.visualViewport.height + 'px';
+                        canvas.style.top = '0';
+                    } else {
+                        canvas.style.height = window.innerHeight + 'px';
+                    }
+                });
+            }
         });
 
-        // Ensure all fields remain hidden after focus is lost (keyboard closes)
-        document.addEventListener('focusout', function (event) {
-          if (event.target.tagName.toLowerCase() === 'input' || event.target.tagName.toLowerCase() === 'textarea') {
-            hideInputFields(event.target);  // Reapply the hide logic
-          }
-        });
-
-        // Adjust canvas size dynamically using the visualViewport API
-        window.visualViewport.addEventListener('resize', function () {
-          if (window.visualViewport.height < window.innerHeight) {
-            // Keyboard is probably open, reduce canvas height
-            canvas.style.height = window.visualViewport.height + 'px';
-            canvas.style.top = '0';  // Keep the canvas at the top
-          } else {
-            // Keyboard is closed, restore full height
-            canvas.style.height = window.innerHeight + 'px';
-          }
-        });
-      }
-    });
-  </script>
-
+        // Function to force redraw on canvas (fix resizing issues)
+        function forceCanvasRedraw(canvas) {
+            canvas.width += 1; // Temporary change to force redraw
+            canvas.width -= 1;
+        }
+    </script>
 </head>
 
 <body>
-
-<!-- Unity Canvas -->
 <canvas id="unity-canvas" tabindex="-1"></canvas>
 
 <script src="Build/006 brotli final.loader.js"></script>
 
 <script>
-  // Function to resize the canvas on window resize
-  function resizeCanvas() {
-    const canvas = document.querySelector("#unity-canvas");
+    function resizeCanvas() {
+        const canvas = document.querySelector("#unity-canvas");
 
-    // Update the canvas size based on the screen orientation
-    if (window.innerWidth > window.innerHeight) {
-      // Landscape mode - Maintain 1:1 aspect ratio
-      const size = window.innerHeight; // Take the height as the limiting dimension
-      canvas.style.width = size + 'px';
-      canvas.style.height = size + 'px';
+        if (window.innerWidth > window.innerHeight) {
+            const size = window.innerHeight;
+            canvas.style.width = size + 'px';
+            canvas.style.height = size + 'px';
+            canvas.style.left = (window.innerWidth - size) / 2 + 'px';
+            canvas.style.top = '0';
+        } else {
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            canvas.style.left = '0';
+            canvas.style.top = '0';
+        }
 
-      // Center the canvas horizontally
-      canvas.style.left = (window.innerWidth - size) / 2 + 'px';
-      canvas.style.top = '0';  // Ensure it's aligned at the top
-    } else {
-      // Portrait mode - Full width and height
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-      canvas.style.left = '0';
-      canvas.style.top = '0';  // Reset to full screen
+        if (window.unityInstance && window.unityInstance.Module) {
+            const moduleCanvas = window.unityInstance.Module.canvas;
+            moduleCanvas.width = parseInt(canvas.style.width);
+            moduleCanvas.height = parseInt(canvas.style.height);
+            moduleCanvas.style.width = canvas.style.width;
+            moduleCanvas.style.height = canvas.style.height;
+        }
+
+        // Force canvas redraw to ensure proper rendering
+        forceCanvasRedraw(canvas);
     }
 
-    // Update Unity canvas size if Unity is initialized
-    if (window.unityInstance && window.unityInstance.Module) {
-      window.unityInstance.Module.canvas.width = parseInt(canvas.style.width);
-      window.unityInstance.Module.canvas.height = parseInt(canvas.style.height);
-      window.unityInstance.Module.canvas.style.width = canvas.style.width;
-      window.unityInstance.Module.canvas.style.height = canvas.style.height;
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', resizeCanvas);
+    resizeCanvas();
+
+    // Meta tag for mobile viewport settings
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
     }
-  }
 
-  // Attach the resize event to update the canvas size when the window changes
-  window.addEventListener('resize', resizeCanvas);
-  window.addEventListener('orientationchange', resizeCanvas);
+    // Create Unity instance
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+        arguments: [],
+        dataUrl: "Build/006 brotli final.data.unityweb",
+        frameworkUrl: "Build/006 brotli final.framework.js.unityweb",
+        codeUrl: "Build/006 brotli final.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Game Design with Jamie Clarke",
+        productName: "Mixtape Rugby",
+        productVersion: "0.2.0",
+        matchWebGLToCanvasSize: true
+    }).then((unityInstance) => {
+        window.unityInstance = unityInstance;
+    });
 
-  // Trigger initial resize
-  resizeCanvas();
-
-
-  // Mobile device configuration for viewport
-  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-    var meta = document.createElement('meta');
-    meta.name = 'viewport';
-    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-    document.getElementsByTagName('head')[0].appendChild(meta);
-  }
-
-  // Unity instance creation
-  createUnityInstance(document.querySelector("#unity-canvas"), {
-    arguments: [],
-    dataUrl: "Build/006 brotli final.data.unityweb",
-    frameworkUrl: "Build/006 brotli final.framework.js.unityweb",
-    codeUrl: "Build/006 brotli final.wasm.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
-    companyName: "Game Design with Jamie Clarke",
-    productName: "Mixtape Rugby",
-    productVersion: "0.2.0",
-    matchWebGLToCanvasSize: true
-  }).then((unityInstance) => {
-    window.unityInstance = unityInstance;
-  });
-
-  function lockOrientation() {
-    if (screen.orientation && screen.orientation.lock) {
-      screen.orientation.lock('portrait').then(function () {
-        console.log("Orientation locked to portrait");
-      }).catch(function (error) {
-        console.log('Screen orientation lock not supported:', error);
-        resizeCanvas(); // Fallback to resizing canvas manually
-      });
+    // Screen orientation lock
+    function lockOrientation() {
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('portrait').catch(function (error) {
+                console.log('Screen orientation lock not supported:', error);
+                resizeCanvas(); // Fallback to resizing canvas manually
+            });
+        }
     }
-  }
 
-  // Attempt to lock the screen orientation to portrait on load
-  lockOrientation();
+    lockOrientation();
 </script>
 
-<!-- Firebase Scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics-compat.js"></script>
 
 <script>
-  // Your Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBlTWVT4eLZYEMzxZplxPhhcs7lCHHHWzk",
-    authDomain: "rugby-mixtape.firebaseapp.com",
-    databaseURL: "https://rugby-mixtape-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "rugby-mixtape",
-    storageBucket: "rugby-mixtape.appspot.com",
-    messagingSenderId: "497500005186",
-    appId: "1:497500005186:web:92277550dd67ad95419edb",
-    measurementId: "G-BR78E6SDJZ"
-  };
+    const firebaseConfig = {
+        apiKey: "AIzaSyBlTWVT4eLZYEMzxZplxPhhcs7lCHHHWzk",
+        authDomain: "rugby-mixtape.firebaseapp.com",
+        databaseURL: "https://rugby-mixtape-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "rugby-mixtape",
+        storageBucket: "rugby-mixtape.appspot.com",
+        messagingSenderId: "497500005186",
+        appId: "1:497500005186:web:92277550dd67ad95419edb",
+        measurementId: "G-BR78E6SDJZ"
+    };
 
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const analytics = firebase.analytics(app);
+    const app = firebase.initializeApp(firebaseConfig);
+    const analytics = firebase.analytics(app);
 </script>
 
 </body>
