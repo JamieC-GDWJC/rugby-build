@@ -40,6 +40,9 @@
         }
     </style>
 
+    <script type='text/javascript'>
+        document.onmousedown = function() {window.focus();};
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const canvas = document.querySelector("#unity-canvas");
@@ -74,7 +77,9 @@
                     }
                 });
 
+                /*
                 window.visualViewport.addEventListener('resize', function () {
+                    
                     if (window.visualViewport.height < window.innerHeight) {
                         canvas.style.height = window.visualViewport.height + 'px';
                         canvas.style.top = '0';
@@ -82,6 +87,8 @@
                         canvas.style.height = window.innerHeight + 'px';
                     }
                 });
+                */
+                     
             }
         });
 
@@ -127,7 +134,7 @@
         forceCanvasRedraw(canvas);
     }
 
-    window.addEventListener('resize', resizeCanvas);
+    //window.addEventListener('resize', resizeCanvas);
     window.addEventListener('orientationchange', resizeCanvas);
     resizeCanvas();
 
