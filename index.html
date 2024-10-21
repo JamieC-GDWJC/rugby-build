@@ -16,7 +16,7 @@
         #unity-canvas {
             width: 100vw;
             height: 100vh;
-            background: url('https://i.imgur.com/EyOcHjB.png') no-repeat top center;
+            background: url('https://i.imgur.com/hoewhMJ.png') no-repeat top center;
             background-size: contain;
             display: block;
             position: fixed;
@@ -53,10 +53,10 @@
 
             if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
                 const hideInputFields = (target) => {
-                    //target.style.position = "absolute";
-                    //target.style.top = "-999px";
-                    //target.style.left = "-999px";
-                    //target.style.opacity = 0;
+                    target.style.position = "absolute";
+                    target.style.top = "-999px";
+                    target.style.left = "-999px";
+                    target.style.opacity = 0;
                 };
 
                 const resetAllInputs = () => {

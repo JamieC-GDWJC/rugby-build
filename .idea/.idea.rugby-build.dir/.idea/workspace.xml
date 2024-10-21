@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f1f0bb62-c577-440c-9e97-797f3d8cb9a7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.rugby-build.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.rugby-build.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/006 brotli final.data.unityweb" beforeDir="false" afterPath="$PROJECT_DIR$/Build/006 brotli final.data.unityweb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,6 +58,8 @@
       <workItem from="1728645631619" duration="1282000" />
       <workItem from="1729086695502" duration="843000" />
       <workItem from="1729241907290" duration="1264000" />
+      <workItem from="1729528428857" duration="11000" />
+      <workItem from="1729528709713" duration="17000" />
     </task>
     <servers />
   </component>
