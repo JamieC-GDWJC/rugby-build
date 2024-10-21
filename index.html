@@ -26,8 +26,8 @@
 
         @media screen and (orientation: portrait) {
             #unity-canvas {
-                width: 100vw;
-                height: 100vh;
+                width: 100%;
+                height: 100%;
             }
         }
 
@@ -77,7 +77,7 @@
                     }
                 });
 
-                /*
+                
                 window.visualViewport.addEventListener('resize', function () {
                     
                     if (window.visualViewport.height < window.innerHeight) {
@@ -87,7 +87,7 @@
                         canvas.style.height = window.innerHeight + 'px';
                     }
                 });
-                */
+                
                      
             }
         });
@@ -134,7 +134,7 @@
         forceCanvasRedraw(canvas);
     }
 
-    //window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', resizeCanvas);
     window.addEventListener('orientationchange', resizeCanvas);
     resizeCanvas();
 
