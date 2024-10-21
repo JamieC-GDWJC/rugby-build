@@ -41,6 +41,7 @@
     </style>
 
     <script type='text/javascript'>
+        document.ontouchstart = function() {window.focus();};
         document.onmousedown = function() {window.focus();};
     </script>
     <script>
@@ -52,10 +53,10 @@
 
             if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
                 const hideInputFields = (target) => {
-                    target.style.position = "absolute";
+                    //target.style.position = "absolute";
                     //target.style.top = "-999px";
                     //target.style.left = "-999px";
-                    target.style.opacity = 0;
+                    //target.style.opacity = 0;
                 };
 
                 const resetAllInputs = () => {
